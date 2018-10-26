@@ -1,22 +1,25 @@
 create keyspace skripsi with replication={'class':'SimpleStrategy','replication_factor':1};
 
 create table cf_transaksi_standard(
+    tahun_ajaran text,
+    bulan int,
 	tanggal_pinjam date,
 	tanggal_batas date,
 	tanggal_kembali date,
 	unique_id uuid,
 	semester int,
-	tahun_ajaran text,
 	id_transaksi int,
 	denda double,
 	terbayar double,
 	nama_jurusan text,
 	fakultas text,
 	kode_anggota text,
-	primary key(tanggal_pinjam,tanggal_batas,tanggal_kembali,unique_id)
+	primary key((tahun_ajaran,bulan),tanggal_pinjam,tanggal_batas,tanggal_kembali,unique_id)
 ) with gc_grace_seconds=1;
 
 create table cf_buku(
+    tahun int,
+    bulan int,
 	tanggal_datang date,
 	tanggal_input date,
 	unique_id uuid,
@@ -30,30 +33,20 @@ create table cf_buku(
 	status_lama text,
 	tanggal_ganti_status date,
 	status_sekarang text,
-	primary key(tanggal_datang,tanggal_input,unique_id)
+	primary key((tahun,bulan),tanggal_datang,tanggal_input,unique_id)
 ) with gc_grace_seconds=1;
 
 create table cf_transaksi_jurusan_kategori(
-	nama_jurusan text,
-	tahun_ajaran text,
-	tgl_pinjam date,
-	kelompok_kategori text,
-	nama_koleksi text,
-	unique_id uuid,
-	semester int,
-	id_transaksi int,
-	fakultas text,
-	kode_anggota text,
-	tgl_batas date,
-	tgl_kembali date,
-	kode_judul int,
-	kode_buku text,
-	judul text,
-	status_lama text,
-	tanggal_ganti_status date,
-	status_sekarang text,
-	denda double,
-	terbayar double,
+	nama_jurusan text,tahun_ajaran text,
+	tgl_pinjam date,kelompok_kategori text,
+	nama_koleksi text,unique_id uuid,
+	semester int,id_transaksi int,
+	fakultas text,kode_anggota text,
+	tgl_batas date,tgl_kembali date,
+	kode_judul int,kode_buku text,
+	judul text,status_lama text,
+	tanggal_ganti_status date,status_sekarang text,
+	denda double,terbayar double,
 	primary key ((nama_jurusan,tahun_ajaran),tgl_pinjam,kelompok_kategori,nama_koleksi,unique_id)
 ) with gc_grace_seconds=1;
 
@@ -70,6 +63,8 @@ primary key((nama_koleksi,tahun_ajaran),tgl_pinjam,
 status_sekarang,nama_jurusan,kelompok_kategori,unique_id);
 
 create table cf_usulan(
+    tahun int,
+    bulan int,
 	tgl_usulan date,
 	unique_id uuid,
 	id_usulan int,
@@ -81,5 +76,5 @@ create table cf_usulan(
 	pengarang text,
 	jenis_usul text,
 	status text,
-	primary key(tgl_usulan,unique_id)
+	primary key((tahun,bulan),tgl_usulan,unique_id)
 ) with gc_grace_seconds=1;
