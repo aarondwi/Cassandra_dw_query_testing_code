@@ -1,5 +1,5 @@
 """
-spark-submit --packages anguenot/pyspark-cassandra:0.9.0 --conf spark.cassandra.connection.host=192.168.38.23 --conf spark.cassandra.auth.username=cassandra --conf spark.cassandra.auth.password=cassandra --conf spark.default.parallelism=10 --master spark://192.168.38.23:7077 --num-executors=6 --executor-cores=2 --executor-memory=7G cassandra_submit_query.py --query_num 3
+spark-submit --packages anguenot/pyspark-cassandra:0.9.0 --conf spark.cassandra.connection.host=192.168.38.23 --conf spark.cassandra.auth.username=cassandra --conf spark.cassandra.auth.password=cassandra --conf spark.default.parallelism=10 --master spark://192.168.38.23:7077 --num-executors=6 --executor-cores=2 --executor-memory=6G cassandra_submit_query.py --query_num 3
 """
 
 from pyspark.sql import *
