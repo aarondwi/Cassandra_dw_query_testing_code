@@ -36,7 +36,7 @@ create table cf_buku(
 	primary key((tahun,bulan),tanggal_datang,tanggal_input,unique_id)
 ) with gc_grace_seconds=1;
 
-create table cf_transaksi_jurusan_kategori(
+create table cf_transaksi_jurusan_kategori_test(
 	nama_jurusan text,tahun_ajaran text,
 	tgl_pinjam date,kelompok_kategori text,
 	nama_koleksi text,unique_id uuid,

@@ -6,7 +6,6 @@ import time
 import uuid
 import gc
 
-#prepare all the query template
 selected_get_query=[ \
 	"SELECT * FROM cf_transaksi_standard_dummy",\
 	"SELECT * FROM cf_buku_dummy",\
@@ -14,7 +13,7 @@ selected_get_query=[ \
 	"SELECT * FROM cf_usulan_dummy",\
     "SELECT * FROM xyz"
 ]
-#the insert's order should follow the name's order as listed in describe
+#the insert's order follow the name's order as listed in describe
 selected_insert_query=[ \
 	"INSERT INTO cf_transaksi_standard (tahun_ajaran, bulan, tanggal_pinjam, tanggal_batas, tanggal_kembali, unique_id, denda, fakultas, id_transaksi, kode_anggota, nama_jurusan, semester, terbayar) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ",\
 	"INSERT INTO cf_buku (tahun, bulan, tanggal_datang, tanggal_input, unique_id, jenis_terbitan, judul, kelompok_kategori, kode_buku, kode_judul, nama_koleksi, penerbit, status_lama, status_sekarang, tanggal_ganti_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",\
@@ -24,7 +23,6 @@ selected_insert_query=[ \
 ]
 selected_pos_unique_id=[5,4,5,3,1]
 
-#parsing all arguments
 parser = argparse.ArgumentParser(description='Duplicating Cassandra DW')
 # 0=> cf_transaksi_standard, 1=> cf_buku, 
 # 2=> cf_transaksi_jurusan_kategori, 3=> cf_usulan
@@ -34,10 +32,8 @@ parser.add_argument('tipe', action="store",type=int)
 parser.add_argument('jumlah', action="store",type=int)
 args = vars(parser.parse_args())
 
-#connecting to cassandra
 auth_provider = PlainTextAuthProvider(username='cassandra', password='cassandra')
 cluster=Cluster([args['ip']],auth_provider=auth_provider)
-#cluster = Cluster(['192.168.38.23', '192.168.38.21','192.168.38.14'],auth_provider=auth_provider)
 session = cluster.connect('skripsi')
 
 results_orig=[]
@@ -67,11 +63,11 @@ for i in range(0,args['jumlah']):
     prep_batch = session.prepare(make_batch_statement(BATCH_SIZE,args['tipe']))
 
     #copying data, and creating new unique_ids
+    #dont want to be updating data instead
     results=results_orig[:]
     for idx in range(0,l):
         results[idx][selected_pos_unique_id[args['tipe']]]=uuid.uuid4()
 
-    #iterating through each data
     while count<len(results):
         # flattened all the data
         # because our statement are flattened

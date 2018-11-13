@@ -1,0 +1,15 @@
+Relational +:
+1. commit membuat query aman
+2. query bisa dioptimasi jika diperlukan
+3. secara umum, query lebih cepat dibanding widecolumn
+
+Relational -:
+1. Query menjadi complex, karena butuh join yang cukup banyak
+
+WideColumn +:
+1. Query sederhana, tidak ada join, hanya subquery
+2. Untuk data yang banyak filter (saat roll-down BI), speed menyamai relational (?)
+
+WideColumn -:
+1. secara umum, query lebih lambat dibanding relational
+2. query tidak bisa dioptimasi lebih, karena tidak bisa mengganti kapan join

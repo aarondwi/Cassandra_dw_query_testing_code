@@ -1,5 +1,5 @@
 --query 1 (tested)
-WITH cte as (
+WITH cte as ( -- ~393.5s
 	SELECT tf.kode_anggota,jd.nama_jurusan,jd.fakultas,dd.tahun_ajaran,
 	COUNT(tf.transaksi_key) AS jumlah,
 	ROW_NUMBER() OVER (PARTITION BY dd.tahun_ajaran ORDER BY count(tf.transaksi_key) DESC) AS r 
@@ -11,6 +11,23 @@ WITH cte as (
 )
 SELECT kode_anggota,nama_jurusan,fakultas,tahun_ajaran,jumlah FROM cte 
 WHERE r<=3 ORDER BY tahun_ajaran,jumlah DESC;
+
+--query 1 (a speedier version)
+WITH cte as ( -- ~354s
+	SELECT tf.kode_anggota,dd.tahun_ajaran,tf.jurusan_key,
+	COUNT(tf.transaksi_key) AS jumlah,
+	ROW_NUMBER() OVER (PARTITION BY dd.tahun_ajaran ORDER BY count(tf.transaksi_key) DESC) AS r 
+	FROM transaksi_fact tf
+	JOIN date_dim dd ON tf.tgl_pinjam_key=dd.date_key
+	WHERE dd.tahun_ajaran IN ('2014/2015' , '2015/2016' , '2016/2017')
+	GROUP BY tf.kode_anggota,dd.tahun_ajaran,tf.jurusan_key
+)
+SELECT cte.kode_anggota, jd.nama_jurusan, jd.fakultas,
+cte.tahun_ajaran, cte.jumlah
+FROM cte
+JOIN jurusan_dim jd ON cte.jurusan_key=jd.jurusan_key
+WHERE cte.r<=3 
+ORDER BY tahun_ajaran,jumlah DESC;
 
 --query 2 (tested)
 SELECT dd.tahun_ajaran,dd.tahun,dd.bulan,SUM(tf.denda) "Total Denda",(SUM(tf.denda)-SUM(tf.terbayar)) "Belum Terbayar"

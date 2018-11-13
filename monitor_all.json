@@ -1,0 +1,12 @@
+{
+    "name":"cassandra_spark",
+    "komp":["komp1","komp2","komp3"],
+    "pid":[
+        [28069,1626],
+        [319,4063],
+        [22259,25975]
+    ],
+    "duration":100,
+    "counter":3,
+    "extra":"3_4_3_4--200--"
+}
